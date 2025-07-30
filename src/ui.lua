@@ -1226,61 +1226,94 @@ function create_UIBox_mods_button()
                                     })
                                 end
                             },
-                            -- {
-                            -- 	label = localize('b_browse'),
-                            -- 	tab_definition_function = function()
-                            -- 		return {
-                            --             n = G.UIT.ROOT,
-                            --             config = {
-                            --                 align = "cm",
-                            --                 padding = 0.05,
-                            --                 colour = G.C.CLEAR,
-                            --             },
-                            --             nodes = {
-                            -- 				{
-                            -- 					n = G.UIT.C,
-                            -- 					config = { align = 'cm' },
-                            -- 					nodes = {
-                            -- 						{
-                            -- 							n = G.UIT.R,
-                            -- 							config = { align = 'cl' },
-                            -- 							nodes = {
-                            -- 								create_text_input{
-                            -- 									prompt_text = localize('b_search_prompt'),
-                            -- 									max_length = 50,
-                            -- 									text_scale = 0.6,
-                            -- 									w = 6,
-                            -- 									h = 1,
-                            -- 									ref_table = SMODS,
-                            -- 									ref_value = "browse_search",
-                            -- 									extended_corpus = true,
-                            -- 								},
-                            -- 								UIBox_button{
-                            -- 									button = 'browse_search',
-                            -- 									label = {localize('b_search_button')},
-                            -- 									minw = 3,
-                            -- 									colour = G.C.RED
-                            -- 								}
-                            -- 							}
-                            -- 						},
-                            -- 						{
-                            -- 							n = G.UIT.R,
-                            -- 							config = { align = 'cm', emboss = 0.05, colour = G.C.BLACK, minh=5, minw=10.5},
-                            -- 							nodes = {
-                            -- 								{
-                            -- 									n = G.UIT.O,
-                            -- 									config = { align = 'cm', object = Moveable(), id = 'browse_mods'}
-                            -- 								}
-                            -- 							}
-                            -- 						}
-                            -- 					}
-                            -- 				}
-                            -- 			}
-                            -- 		}
-                            -- 	end,
-                            -- },
                             {
-
+                                label = "Manage", -- New Manage tab
+                                tab_definition_function = function()
+                                    return {
+                                        n = G.UIT.ROOT,
+                                        config = {
+                                            emboss = 0.05,
+                                            minh = 6,
+                                            r = 0.1,
+                                            minw = 6,
+                                            align = "cm",
+                                            padding = 0.2,
+                                            colour = G.C.BLACK
+                                        },
+                                        nodes = {
+                                            -- Disable All Mods button
+                                            {
+                                                n = G.UIT.R,
+                                                config = {
+                                                    padding = 0.2,
+                                                    align = "cm"
+                                                },
+                                                nodes = {
+                                                    UIBox_button({
+                                                        minw = 4,
+                                                        button = "disable_all_mods",
+                                                        label = {"Disable All Mods"},
+                                                        colour = G.C.RED,
+                                                        scale = 0.8
+                                                    })
+                                                }
+                                            },
+                                            -- Enable All Mods button
+                                            {
+                                                n = G.UIT.R,
+                                                config = {
+                                                    padding = 0.2,
+                                                    align = "cm"
+                                                },
+                                                nodes = {
+                                                    UIBox_button({
+                                                        minw = 4,
+                                                        button = "enable_all_mods",
+                                                        label = {"Enable All Mods"},
+                                                        colour = G.C.GREEN,
+                                                        scale = 0.8
+                                                    })
+                                                }
+                                            },
+                                            -- Open Mods Directory button (removed the one in the mods tab)
+                                            {
+                                                n = G.UIT.R,
+                                                config = {
+                                                    padding = 0.2,
+                                                    align = "cm"
+                                                },
+                                                nodes = {
+                                                    UIBox_button({
+                                                        minw = 4,
+                                                        button = "openModsDirectory",
+                                                        label = {"Open Mods Folder"},
+                                                        colour = G.C.BOOSTER,
+                                                        scale = 0.8
+                                                    })
+                                                }
+                                            },
+                                            -- Reload Mods button
+                                            {
+                                                n = G.UIT.R,
+                                                config = {
+                                                    padding = 0.2,
+                                                    align = "cm"
+                                                },
+                                                nodes = {
+                                                    UIBox_button({
+                                                        minw = 4,
+                                                        button = "reload_all_mods",
+                                                        label = {"Reload All Mods"},
+                                                        colour = G.C.BLUE,
+                                                        scale = 0.8
+                                                    })
+                                                }
+                                            }
+                                        }
+                                    }
+                                end
+                            },
+                            {
                                 label = localize('b_credits'),
                                 tab_definition_function = function()
                                     return {
@@ -1410,9 +1443,13 @@ function create_UIBox_mods_button()
                                     return {
                                         n = G.UIT.ROOT,
                                         config = {
+                                            emboss = 0.05,
+                                            minh = 6,
+                                            r = 0.1,
+                                            minw = 6,
                                             align = "cm",
-                                            padding = 0.05,
-                                            colour = G.C.CLEAR,
+                                            padding = 0.2,
+                                            colour = G.C.BLACK
                                         },
                                         nodes = {
                                             create_toggle {
@@ -1445,6 +1482,172 @@ function create_UIBox_mods_button()
             }
         }
     }))
+end
+
+-- New management tab functions
+G.FUNCS.disable_all_mods = function(e)
+    G.SETTINGS.paused = true
+    G.FUNCS.overlay_menu{
+        definition = create_UIBox_generic_options({
+            back_func = 'exit_overlay_menu',
+            no_back=true,
+            contents = {
+                {
+                    n = G.UIT.R,
+                    config = { align = "cm", padding = 0.1 },
+                    nodes = {
+                        {
+                            n = G.UIT.T,
+                            config = {
+                                text = "Disable all active mods? The game will restart.",
+                                scale = 0.4,
+                                colour = G.C.UI.TEXT_LIGHT,
+                                shadow = true
+                            }
+                        }
+                    }
+                },
+                {
+                    n = G.UIT.R,
+                    config = { align = "cm", padding = 0.1 },
+                    nodes = {
+                        UIBox_button({
+                            button = "confirm_disable_all",
+                            label = {"Confirm"},
+                            minw = 3,
+                            colour = G.C.RED
+                        }),
+                        UIBox_button({
+                            button = "exit_overlay_menu",
+                            label = {"Cancel"},
+                            minw = 3,
+                            colour = G.C.BOOSTER
+
+                        })
+                    }
+                }
+            }
+        })
+    }
+end
+
+G.FUNCS.enable_all_mods = function(e)
+    G.SETTINGS.paused = true
+    G.FUNCS.overlay_menu{
+        definition = create_UIBox_generic_options({
+            back_func = 'exit_overlay_menu',
+            no_back=true,
+            contents = {
+                {
+                    n = G.UIT.R,
+                    config = { align = "cm", padding = 0.1 },
+                    nodes = {
+                        {
+                            n = G.UIT.T,
+                            config = {
+                                text = "Enable all mods? The game will restart.",
+                                scale = 0.4,
+                                colour = G.C.UI.TEXT_LIGHT,
+                                shadow = true
+                                
+                            }
+                        }
+                    }
+                },
+                {
+                    n = G.UIT.R,
+                    config = { align = "cm", padding = 0.1 },
+                    nodes = {
+                        UIBox_button({
+                            button = "confirm_enable_all",
+                            label = {"Confirm"},
+                            minw = 3,
+                            colour = G.C.GREEN
+                        }),
+                        UIBox_button({
+                            button = "exit_overlay_menu",
+                            label = {"Cancel"},
+                            minw = 3,
+                            colour = G.C.BOOSTER
+                        })
+                    }
+                }
+            }
+        })
+    }
+end
+
+G.FUNCS.reload_all_mods = function(e)
+    G.SETTINGS.paused = true
+    G.FUNCS.overlay_menu{
+        definition = create_UIBox_generic_options({
+            back_func = 'exit_overlay_menu',
+            no_back=true,
+            contents = {
+                {
+                    n = G.UIT.R,
+                    config = { align = "cm", padding = 0.1 },
+                    nodes = {
+                        {
+                            n = G.UIT.T,
+                            config = {
+                                text = "Reload all mods? The game will restart.",
+                                scale = 0.4,
+                                colour = G.C.UI.TEXT_LIGHT,
+                                shadow = true
+                            }
+                        }
+                    }
+                },
+                {
+                    n = G.UIT.R,
+                    config = { align = "cm", padding = 0.1 },
+                    nodes = {
+                        UIBox_button({
+                            button = "confirm_reload_all",
+                            label = {"Confirm"},
+                            minw = 3,
+                            colour = G.C.BLUE
+                        }),
+                        UIBox_button({
+                            button = "exit_overlay_menu",
+                            label = {"Cancel"},
+                            minw = 3,
+                            colour = G.C.BOOSTER
+                        })
+                    }
+                }
+            }
+        })
+    }
+end
+
+G.FUNCS.confirm_disable_all = function(e)
+    -- Disable all mods
+    for _, mod in ipairs(SMODS.mod_list) do
+        mod.should_enable = false
+        NFS.write(mod.path .. '.lovelyignore', '')
+    end
+    
+    SMODS.full_restart = 1
+    G.FUNCS.exit_mods(e)
+end
+
+G.FUNCS.confirm_enable_all = function(e)
+    -- Enable all mods
+    for _, mod in ipairs(SMODS.mod_list) do
+        mod.should_enable = true
+        NFS.remove(mod.path .. '.lovelyignore')
+    end
+    
+    SMODS.full_restart = 1
+    G.FUNCS.exit_mods(e)
+end
+
+G.FUNCS.confirm_reload_all = function(e)
+    -- Just trigger a restart to reload all mods
+    SMODS.full_restart = 1
+    G.FUNCS.exit_mods(e)
 end
 
 G.FUNCS.update_achievement_settings = function(e)
@@ -1696,6 +1899,48 @@ end
 -- Define the content in the pane that does not need to update
 -- Should include OBJECT nodes that indicate where the dynamic content sections will be populated
 -- EX: in this pane the 'modsList' node will contain the dynamic content which is defined in the function below
+-- Add this after other SMODS utility functions
+function SMODS.get_mod_counts()
+    local total = #SMODS.mod_list
+    local enabled = 0
+    local disabled = 0
+    local can_load = 0
+    local cannot_load = 0
+    
+    for _, mod in ipairs(SMODS.mod_list) do
+        if mod.disabled then
+            disabled = disabled + 1
+        else
+            enabled = enabled + 1
+        end
+        
+        if mod.can_load then
+            can_load = can_load + 1
+        else
+            cannot_load = cannot_load + 1
+        end
+    end
+    
+    return {
+        total = total,
+        enabled = enabled,
+        disabled = disabled,
+        can_load = can_load,
+        cannot_load = cannot_load
+    }
+end
+
+function SMODS.create_mod_count_text()
+    local counts = SMODS.get_mod_counts()
+    return {
+        string.format("%d %s", counts.total, localize('b_mods_total')),
+        string.format("%d %s", counts.enabled, localize('b_mods_enabled')),
+        string.format("%d %s", counts.disabled, localize('b_mods_disabled')),
+        string.format("%d %s", counts.can_load, localize('b_mods_working')),
+        string.format("%d %s", counts.cannot_load, localize('b_mods_problematic'))
+    }
+end
+
 function SMODS.GUI.staticModListContent()
     local scale = 0.75
     local currentPage, pageOptions, showingList = recalculateModsList()
@@ -1710,37 +1955,52 @@ function SMODS.GUI.staticModListContent()
             colour = G.C.BLACK
         },
         nodes = {
-            -- row container
             {
                 n = G.UIT.C,
                 config = { align = "cm", padding = 0.05 },
                 nodes = {
-                    -- column container
                     {
                         n = G.UIT.C,
                         config = { align = "cm", minw = 5, padding = 0.05, r = 0.1, colour = G.C.CLEAR },
                         nodes = {
-                            -- title row
                             {
                                 n = G.UIT.R,
                                 config = {
                                     padding = 0.05,
                                     align = "cm"
                                 },
+                            },
+                            {
+                                n = G.UIT.R,
+                                config = {
+                                    padding = 0.05,
+                                    align = "cm",
+                                    r = 0.1,
+                                    colour = G.C.BOOSTER,
+                                    id = 'mod_count_display'
+                                },
                                 nodes = {
-                                    UIBox_button({
-                                        label = { localize('b_mod_list') },
-                                        shadow = true,
-                                        scale = scale*0.85,
-                                        colour = G.C.BOOSTER,
-                                        button = "openModsDirectory",
-                                        minh = scale,
-                                        minw = 9
-                                    }),
+                                    {
+                                        n = G.UIT.C,
+                                        config = { align = "cm", padding = 0.05 },
+                                        nodes = {
+                                            {
+                                                n = G.UIT.O,
+                                                config = {
+                                                    object = DynaText({
+                                                        string = SMODS.create_mod_count_text(),
+                                                        colours = {G.C.UI.TEXT_LIGHT},
+                                                        scale = 0.35,
+                                                        spacing = 0.8,
+                                                        shadow = true,
+                                                        pop_in = 0.1
+                                                    })
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             },
-
-                            -- add some empty rows for spacing
                             {
                                 n = G.UIT.R,
                                 config = { align = "cm", padding = 0.05 },
@@ -1761,9 +2021,6 @@ function SMODS.GUI.staticModListContent()
                                 config = { align = "cm", padding = 0.05 },
                                 nodes = {}
                             },
-
-                            -- dynamic content rendered in this row container
-                            -- list of 4 x 4 mods on the current page
                             {
                                 n = G.UIT.R,
                                 config = {
@@ -1776,18 +2033,12 @@ function SMODS.GUI.staticModListContent()
                                     {n=G.UIT.O, config={align = "cm", id = 'modsList', object = Moveable()}},
                                 }
                             },
-
-                            -- another empty row for spacing
                             {
                                 n = G.UIT.R,
                                 config = { align = "cm", padding = 0.8 },
                                 nodes = {}
                             },
-                            -- page selector
-                            -- does not appear when list of mods is empty
-                            showingList and SMODS.GUI.createOptionSelector({label = "", scale = 0.8, options = pageOptions, opt_callback = 'update_mod_list', no_pips = true, current_option = (
-                                    currentPage
-                            )}) or nil
+                            showingList and SMODS.GUI.createOptionSelector({label = "", scale = 0.8, options = pageOptions, opt_callback = 'update_mod_list', no_pips = true, current_option = currentPage}) or nil
                         }
                     },
                 }
@@ -1795,14 +2046,12 @@ function SMODS.GUI.staticModListContent()
         }
     }
 end
-
 function SMODS.GUI.dynamicModListContent(page)
     local scale = 0.75
     local _, __, showingList, startIndex, endIndex, modsRowPerPage, modsColPerRow = recalculateModsList(page)
 
     local modNodes = {}
 
-    -- If no mods are loaded, show a default message
     if showingList == false then
         table.insert(modNodes, {
             n = G.UIT.R,
@@ -1859,6 +2108,20 @@ function SMODS.GUI.dynamicModListContent(page)
                 nodes = current_row
             })
         end
+    end
+
+    -- Update the mod count display
+    local count_display = G.OVERLAY_MENU:get_UIE_by_ID('mod_count_display')
+    if count_display and count_display.config.object then
+        count_display.config.object:remove()
+        count_display.config.object = DynaText({
+            string = SMODS.create_mod_count_text(),
+            colours = {G.C.UI.TEXT_LIGHT},
+            scale = 0.35,
+            spacing = 0.8,
+            shadow = true,
+            pop_in = 0.1
+        })
     end
 
     return {
