@@ -197,6 +197,11 @@ return {
             hidden_achievement = "Play more to find out!",
         },
         dictionary = {
+            b_mods_total = "Total Mods",
+            b_mods_enabled = "Enabled",
+            b_mods_disabled = "Disabled",
+            b_mods_working = "Working",
+            b_mods_problematic = "Problematic",
             b_mods = 'Mods',
             b_mods_cap = 'MODS',
             b_modded_version = 'Modded Version!',
